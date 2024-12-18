@@ -1,0 +1,8 @@
+﻿  dllmain.cpp
+  Gamex.cpp
+D:\VS2022\VC\Tools\MSVC\14.42.34433\include\filesystem(12): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+  Hook.cpp
+  正在生成代码...
+D:\dp2\DofProject\Hook.cpp(7,60): warning C4244: “=”: 从“unsigned long”转换到“UCHAR”，可能丢失数据
+D:\dp2\DofProject\Hook.cpp(16,60): warning C4244: “=”: 从“unsigned long”转换到“UCHAR”，可能丢失数据
+  DofProject.vcxproj -> D:\dp2\DofProject\Debug\DofProject.dll
