@@ -17,6 +17,8 @@ void Gamex::DLL_Main(std::string exeType) {
 	SetClipboardData(exeType);
 	// 修复字母‘R’&‘I’
 	FixLetterText(exeType);
+	// 缩放优化(取消[use zoom rate]标签镜头跟随) 感觉不明显
+	// FreeZoomRate(exeType);
 };
 
 // 修复233包头异常
@@ -74,5 +76,14 @@ void FixLetterText(std::string exeType) {
 		// 修复字母‘I’
 		*(BYTE*)0x011EE391 = 0xEB;
 		memcpy((void*)0x011EEDF5, "\xE9\x24\x02\x00\x00\x90", 6);
+	}
+}
+
+// 缩放优化(取消[use zoom rate]标签镜头跟随)
+void FreeZoomRate(std::string exeType) {
+	// 0627
+	if (exeType == "0627") {
+		*(BYTE*)0x008E3023 = 0xEB;
+		memcpy((void*)0x008E3114, "\xEB\x0E\x90\x90\x90", 5);
 	}
 }

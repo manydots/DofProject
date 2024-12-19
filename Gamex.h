@@ -7,6 +7,7 @@ void FixPackage(std::string exeType);
 void DisableBuyback(std::string exeType);
 void SetClipboardData(std::string exeType);
 void FixLetterText(std::string exeType);
+void FreeZoomRate(std::string exeType);
 
 namespace Gamex
 {
