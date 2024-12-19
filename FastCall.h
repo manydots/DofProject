@@ -1,5 +1,5 @@
 #pragma once
-#include "Gamex.h"
+#include "Hook.h"
 
 // 0627关闭NPC重新回购后修复线条空缺问题 @蛐蛐大佬 提供
 typedef int(__thiscall* _getLineSize_t)(uint32_t*);
@@ -14,4 +14,25 @@ int __fastcall my_getLineSize(uint32_t* pthis)
 	if (page)
 		length -= page[14]; // Weight
 	return length;
+}
+
+// 修复字母‘R’
+static const wchar_t* text_R = L"R";
+Naked void R_Text1()
+{
+	_asm {
+		mov eax, text_R
+		mov dword ptr ds : [0x01B47208] , eax
+		mov eax, 0x015319C8
+		jmp eax
+	}
+}
+Naked void R_Text2()
+{
+	_asm {
+		mov eax, text_R
+		mov dword ptr ds : [0x01ADE05C] , eax
+		mov eax, 0x0150F4A4
+		jmp eax
+	}
 }

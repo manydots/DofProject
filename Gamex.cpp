@@ -13,6 +13,10 @@ void Gamex::DLL_Main(std::string exeType) {
 	FixPackage(exeType);
 	// 关闭NPC重新回购
 	DisableBuyback(exeType);
+	// 开启[Ctrl+v]粘贴权限
+	SetClipboardData(exeType);
+	// 修复字母‘R’&‘I’
+	FixLetterText(exeType);
 };
 
 // 修复233包头异常
@@ -47,5 +51,28 @@ void DisableBuyback(std::string exeType) {
 		WriteCall((void*)0x00EA8631, &my_getLineSize);
 		// 关闭NPC重新回购
 		memcpy((void*)0x00EA8663, "\x66\xC7\x47\x0C\x00\x00\xEB\x4E\x90", 9);
+	}
+}
+
+// 开启[Ctrl+v]粘贴权限2.0
+void SetClipboardData(std::string exeType) {
+	// 0627
+	if (exeType == "0627") {
+		// *(WORD*)0x011C53B0 = 0x01B0;
+		memcpy((void*)0x011C53AA, "\xEB\x0C\x90\x90\x90\x90", 6);
+	}
+}
+
+// 修复字母‘R’&‘I’
+void FixLetterText(std::string exeType) {
+	// 0627
+	if (exeType == "0627") {
+		// 修复字母‘R’
+		WriteJmp((void*)0x015319C3, (void*)R_Text1);
+		WriteJmp((void*)0x0150F49F, (void*)R_Text2);
+
+		// 修复字母‘I’
+		*(BYTE*)0x011EE391 = 0xEB;
+		memcpy((void*)0x011EEDF5, "\xE9\x24\x02\x00\x00\x90", 6);
 	}
 }
