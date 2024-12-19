@@ -6,7 +6,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		Gamex::InitDof("0627"); // 初始化客户端版本
+		Gamex::DLL_Main(); // 初始化客户端版本
 
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:

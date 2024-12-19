@@ -1,4 +1,4 @@
 #pragma once
 
-void writeJmp(void* pfn, void* pCallback);
-void writeCall(void* pfn, void* pCallback);
+void WriteJmp(void* pfn, void* pCallback);
+void WriteCall(void* pfn, void* pCallback);

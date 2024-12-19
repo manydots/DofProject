@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dof.h" />
+    <ClInclude Include="FastCall.h" />
     <ClInclude Include="Gamex.h" />
     <ClInclude Include="Hook.h" />
     <ClInclude Include="Memory.h" />

@@ -33,4 +33,7 @@
 /x64
 /Release
 /Debug
+/DofProject/Release/
+/DofProject/Debug/
+/DofProject/x64/
 .vs
