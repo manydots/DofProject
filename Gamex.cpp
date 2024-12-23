@@ -8,7 +8,11 @@
 Memory dx;
 
 // 初始化
-void Gamex::DLL_Main(std::string exeType) {
+void Gamex::DLL_Main() {
+
+	// TODO 通过dnf.exe获取版本信息
+	std::string exeType = "0627";
+
 	// 修复233包头异常
 	FixPackage(exeType);
 	// 关闭NPC重新回购
@@ -19,6 +23,12 @@ void Gamex::DLL_Main(std::string exeType) {
 	FixLetterText(exeType);
 	// 缩放优化(取消[use zoom rate]标签镜头跟随) 感觉不明显
 	// FreeZoomRate(exeType);
+	// 修复 "//移动物品" 命令至脚下
+	FixItemPosCMD(exeType);
+	// 开启台服DNF邮件GM标识
+	FixGMofMail(exeType);
+	// 技能栏默认显示技能名称
+	ShowSkillName(exeType);
 };
 
 // 修复233包头异常
@@ -85,5 +95,32 @@ void FreeZoomRate(std::string exeType) {
 	if (exeType == "0627") {
 		*(BYTE*)0x008E3023 = 0xEB;
 		memcpy((void*)0x008E3114, "\xEB\x0E\x90\x90\x90", 5);
+	}
+}
+
+// 修复 "//移动物品" 命令至脚下
+void FixItemPosCMD(std::string exeType) {
+	// 0627
+	if (exeType == "0627") {
+		WriteCall((void*)0x00950716, (void*)my_setItemPosCMD2);
+	}
+}
+
+// 开启台服DNF邮件GM标识
+void FixGMofMail(std::string exeType) {
+	// 0627修复邮件GM标志
+	if (exeType == "0627") {
+		*(char*)0x0094E948 = 16;//帧数
+		// Interface/newstyle/windows/Mail/AddingMailControl.img
+		*(int*)0x0094E94A = 0x015CCE68;
+		WriteJmp((void*)0x00949050, &setGMofMail);
+	}
+}
+
+// 技能栏默认显示技能名称
+void ShowSkillName(std::string exeType) {
+	if (exeType == "0627") {
+		// 0627默认开启技能名称
+		*(WORD*)0x006D50FA = 0x12EB;
 	}
 }

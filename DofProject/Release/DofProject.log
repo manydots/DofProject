@@ -1,8 +1,9 @@
 ﻿  Gamex.cpp
 D:\VS2022\VC\Tools\MSVC\14.42.34433\include\filesystem(12): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+  dllmain.cpp
   正在生成代码
-  2 of 88 functions ( 2.3%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    4 functions had inline decision re-evaluated but remain unchanged
+  3 of 93 functions ( 3.2%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    6 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   DofProject.vcxproj -> D:\dp2\DofProject\Release\DofProject.dll

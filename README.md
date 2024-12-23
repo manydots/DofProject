@@ -8,11 +8,21 @@
 # 3.dllmain.cpp修改配置-项目生成 DofProject.dll
 ```
 
+#### 免责声明
+
+- 本项目仅供学习使用，使用本项目时，必须遵守相关法律法规，严禁任何形式的商业用途。
+
 #### 其他资源
 
 - [Visual Studio 2022](https://visualstudio.microsoft.com/zh-hans/downloads/)
 
 #### 更新日志
+
+##### 2024-12-23
+
+- 技能栏默认显示技能名称
+- 开启台服 DNF 邮件 GM 标识
+- 修复 "//移动物品" 命令至脚下
 
 ##### 2024-12-19
 

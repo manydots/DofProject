@@ -8,6 +8,9 @@ void DisableBuyback(std::string exeType);
 void SetClipboardData(std::string exeType);
 void FixLetterText(std::string exeType);
 void FreeZoomRate(std::string exeType);
+void FixItemPosCMD(std::string exeType);
+void FixGMofMail(std::string exeType);
+void ShowSkillName(std::string exeType);
 
 namespace Gamex
 {
@@ -22,11 +25,11 @@ namespace Gamex
 	 * 0627  1.1180.2.1
 	 * 0725  1.1200.4.1
 	 * 1031  1.1260.5.1
-	 * 
+	 *
 	 * TODO
 	 *	- 通过dnf.exe获取版本信息
 	 * 	- 通过.ini配置功能启用/关闭
-	 * 
+	 *
 	 * */
-	void DLL_Main(std::string exeType = "0627");
+	void DLL_Main();
 }
