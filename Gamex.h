@@ -11,6 +11,7 @@ void FreeZoomRate(std::string exeType);
 void FixItemPosCMD(std::string exeType);
 void FixGMofMail(std::string exeType);
 void ShowSkillName(std::string exeType);
+void DisableOtherWinMin(std::string exeType);
 
 namespace Gamex
 {

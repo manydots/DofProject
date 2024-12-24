@@ -3,32 +3,104 @@
 #include "Memory.h"
 #include "Hook.h"
 #include "FastCall.h"
+#include "Logger.h"
+#include "xini_file.h"
 
 // 创建读写类
 Memory dx;
 
+// 载入配置
+static void loadConfig()
+{
+	std::string config_file = GetProgramDir() + '\\' + "dof.ini";
+	xini_file_t xini_file(config_file);// 初始化配置文件读写类
+
+	if (!fs::exists(config_file)) {
+		xini_file["系统配置"]["服务器IP"] = "192.168.200.131";
+		xini_file["系统配置"]["客户端版本"] = "0627";
+		xini_file["系统配置"]["本地日志"] = 0;
+
+		xini_file["功能配置"]["文本粘贴权限"] = 1;
+		xini_file["功能配置"]["邮件GM标识"] = 1;
+		xini_file["功能配置"]["关闭回购商店"] = 1;
+		xini_file["功能配置"]["技能栏显示技能名称"] = 1;
+		xini_file["功能配置"]["修复233包头"] = 1;
+		xini_file["功能配置"]["修复移动物品"] = 1;
+		xini_file["功能配置"]["修复字母显示"] = 1;
+		xini_file["功能配置"]["禁用最小化其他窗口"] = 0;
+		xini_file["功能配置"]["缩放优化"] = 0;
+	}
+
+	int openLog = xini_file["系统配置"]["本地日志"];
+	LogMessage("EXE执行路径 " + config_file, openLog);
+	std::string GameHost = (const char*)xini_file["系统配置"]["服务器IP"];
+	LogMessage("服务器IP:" + GameHost, openLog);
+	std::string exeType = (const char*)xini_file["系统配置"]["客户端版本"];
+	LogMessage("客户端版本:" + exeType, openLog);
+
+
+	int Feature1 = xini_file["功能配置"]["文本粘贴权限"];
+	int Feature2 = xini_file["功能配置"]["邮件GM标识"];
+	int Feature3 = xini_file["功能配置"]["关闭回购商店"];
+	int Feature4 = xini_file["功能配置"]["技能栏显示技能名称"];
+	int Feature5 = xini_file["功能配置"]["修复233包头"];
+	int Feature6 = xini_file["功能配置"]["修复移动物品"];
+	int Feature7 = xini_file["功能配置"]["修复字母显示"];
+	int Feature8 = xini_file["功能配置"]["禁用最小化其他窗口"];
+	int Feature9 = xini_file["功能配置"]["缩放优化"];
+
+	if (Feature1 == 1) {
+		// 开启[Ctrl+v]粘贴权限
+		SetClipboardData(exeType);
+		LogMessage("开启[Ctrl+v]粘贴权限", openLog);
+	}
+
+	if (Feature2 == 1) {
+		// 开启台服DNF邮件GM标识
+		FixGMofMail(exeType);
+		LogMessage("开启台服DNF邮件GM标识", openLog);
+	}
+	if (Feature3 == 1) {
+		// 关闭NPC重新回购
+		DisableBuyback(exeType);
+		LogMessage("关闭NPC重新回购", openLog);
+	}
+	if (Feature4 == 1) {
+		// 技能栏默认显示技能名称
+		ShowSkillName(exeType);
+		LogMessage("技能栏默认显示技能名称", openLog);
+	}
+	if (Feature5 == 1) {
+		// 修复233包头异常
+		FixPackage(exeType);
+		LogMessage("修复233包头异常", openLog);
+	}
+	if (Feature6 == 1) {
+		// 修复 "//移动物品" 命令至脚下
+		FixItemPosCMD(exeType);
+		LogMessage("修复‘//移动物品’命令至脚下", openLog);
+	}
+	if (Feature7 == 1) {
+		// 修复字母‘R’&‘I’
+		FixLetterText(exeType);
+		LogMessage("修复字母‘R’&‘I’", openLog);
+	}
+	if (Feature8 == 1) {
+		// 禁用启动游戏时最小化其他窗口 @光头大佬
+		DisableOtherWinMin(exeType);
+		LogMessage("禁用启动游戏时最小化其他窗口", openLog);
+	}
+	if (Feature9 == 1) {
+		// 缩放优化(取消[use zoom rate]标签镜头跟随) 感觉不明显
+		FreeZoomRate(exeType);
+		LogMessage("缩放优化(取消[use zoom rate]标签镜头跟随)", openLog);
+	}
+}
+
 // 初始化
 void Gamex::DLL_Main() {
-
-	// TODO 通过dnf.exe获取版本信息
-	std::string exeType = "0627";
-
-	// 修复233包头异常
-	FixPackage(exeType);
-	// 关闭NPC重新回购
-	DisableBuyback(exeType);
-	// 开启[Ctrl+v]粘贴权限
-	SetClipboardData(exeType);
-	// 修复字母‘R’&‘I’
-	FixLetterText(exeType);
-	// 缩放优化(取消[use zoom rate]标签镜头跟随) 感觉不明显
-	// FreeZoomRate(exeType);
-	// 修复 "//移动物品" 命令至脚下
-	FixItemPosCMD(exeType);
-	// 开启台服DNF邮件GM标识
-	FixGMofMail(exeType);
-	// 技能栏默认显示技能名称
-	ShowSkillName(exeType);
+	// TODO 通过dnf.exe获取版本信息 & 配置文件获取
+	loadConfig();
 };
 
 // 修复233包头异常
@@ -49,9 +121,10 @@ void FixPackage(std::string exeType)
 		// 兼容0725exe
 		dx.Writes(0x730947, static_cast<const void*>(bAddr), sizeof(bAddr));
 	}
-
-	// 1031[未测试，木青插件中已修复]
-	// dx.Writes(0x7458C7, static_cast<const void*>(bAddr), sizeof(bAddr));
+	else if (exeType == "1031") {
+		// 兼容1031exe
+		dx.Writes(0x7458C7, static_cast<const void*>(bAddr), sizeof(bAddr));
+	}
 }
 
 
@@ -122,5 +195,17 @@ void ShowSkillName(std::string exeType) {
 	if (exeType == "0627") {
 		// 0627默认开启技能名称
 		*(WORD*)0x006D50FA = 0x12EB;
+	}
+}
+
+// 禁用启动游戏时最小化其他窗口 @光头大佬
+void DisableOtherWinMin(std::string exeType) {
+	if (exeType == "0627") {
+		memset((LPVOID)0x006FC6FC, 0x90, 18);
+	}
+	else if (exeType == "1031") {
+		//memset((LPVOID)0x7199CE, 0x90, 18);
+		//*(char*)0x7199CA = 0xEB; // 10进制7444938 转化16进制 0x7199CA
+		RtlCopyMemory((LPVOID)0x7199CA, "\xEB", 1); // 未测试
 	}
 }
