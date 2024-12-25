@@ -15,7 +15,7 @@
 #### 其他说明
 
 - xini_file.h Memory.h @木青大佬自用分享
-- 仅供C++写法参考
+- 仅供 C++写法参考
 
 #### 自定义功能开启/关闭
 
@@ -42,6 +42,11 @@ xini_file["功能配置"]["缩放优化"] = 0;
 - [Visual Studio 2022](https://visualstudio.microsoft.com/zh-hans/downloads/)
 
 #### 更新日志
+
+##### 2024-12-26
+
+- 修复领主之塔异常
+- 修复角色二觉职业名称乱码
 
 ##### 2024-12-25
 

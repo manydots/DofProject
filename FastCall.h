@@ -96,3 +96,41 @@ static bool __fastcall setGMofMail(DWORD* pthis)
 		return false;
 	}
 }
+
+// 0627修复领主之塔通关返回城镇摆摊或分解机崩溃（3.0优化版）
+Naked void fixNewBoundingRound() {
+	_asm {
+		mov eax, 0x006FC760
+		call eax
+		mov ebx, [eax + 0xB0]
+		cmp dword ptr ds : [ebx + 0x2A0] , 13
+		jne label1
+		mov dword ptr ds : [ebx + 0x2A0] , -1
+		label1 :
+		mov ecx, eax
+		mov eax, 0x007529F0
+		call eax
+		mov eax, [eax + 0x4C]
+		cmp eax, 0
+		je label2
+		mov edi, dword ptr ds : [eax + 0x644]
+		push 0x00FFDAAA
+		ret
+		label2 :
+		push 0x00FFDB0C
+			ret
+	}
+}
+
+// 0627默认创建缔造者
+Naked void DefaultCharacter() {
+	static DWORD pfCha_ret = 0x010F3347;
+	_asm {
+		cmp dword ptr ds : [0x01A5FE1C] , 0x01
+		jae label1
+		mov eax, 0xA
+		label1 :
+		mov DWORD PTR ds : [esi + 0xC0] , eax
+		jmp pfCha_ret
+	}
+}

@@ -3,16 +3,6 @@
 #include "dof.h"
 
 
-void FixPackage(std::string exeType);
-void DisableBuyback(std::string exeType);
-void SetClipboardData(std::string exeType);
-void FixLetterText(std::string exeType);
-void FreeZoomRate(std::string exeType);
-void FixItemPosCMD(std::string exeType);
-void FixGMofMail(std::string exeType);
-void ShowSkillName(std::string exeType);
-void DisableOtherWinMin(std::string exeType);
-
 namespace Gamex
 {
 	//#define _v(v1,v2) ((v1|v2)<<8)
@@ -33,4 +23,17 @@ namespace Gamex
 	 *
 	 * */
 	void DLL_Main();
+
+	void FixPackage(std::string exeType);
+	void DisableBuyback(std::string exeType);
+	void SetClipboardData(std::string exeType);
+	void FixLetterText(std::string exeType);
+	void FreeZoomRate(std::string exeType);
+	void FixItemPosCMD(std::string exeType);
+	void FixGMofMail(std::string exeType);
+	void ShowSkillName(std::string exeType);
+	void DisableOtherWinMin(std::string exeType);
+	void FixLordTower(std::string exeType);
+	void FixCharacterName(std::string exeType);
+	void CreateCreatorMage(std::string exeType);
 }
