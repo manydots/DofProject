@@ -12,14 +12,19 @@ Memory dx;
 // 载入配置
 static void loadConfig()
 {
-	std::string config_file = GetProgramDir() + '\\' + "dof.ini";
+	std::string programDir = GetProgramDir();
+	std::string config_file = programDir + '\\' + "dof.ini";
 	xini_file_t xini_file(config_file);// 初始化配置文件读写类
+
+	std::string programPath = programDir + "\\DNF.exe";
+	std::string version = GetFileVersion(programPath); // 客户端版本信息
 
 	if (!fs::exists(config_file)) {
 		xini_file["系统配置"]["服务器IP"] = "192.168.200.131";
-		xini_file["系统配置"]["客户端版本"] = "0627";
+		xini_file["系统配置"]["客户端版本"] = version;
 		xini_file["系统配置"]["本地日志"] = 0;
 
+		xini_file["功能配置"]["本地GM"] = 0;
 		xini_file["功能配置"]["文本粘贴权限"] = 1;
 		xini_file["功能配置"]["邮件GM标识"] = 1;
 		xini_file["功能配置"]["关闭回购商店"] = 1;
@@ -32,13 +37,19 @@ static void loadConfig()
 		xini_file["功能配置"]["修复领主之塔"] = 1;
 		xini_file["功能配置"]["修复二觉名称乱码"] = 0;
 		//xini_file["功能配置"]["默认创建缔造者"] = 0;
+
+		xini_file["颜色配置"]["角色名称颜色"] = "#FFFFFF";
+		xini_file["颜色配置"]["NPC名称颜色"] = "#E6C89B";
 	}
 
 	int openLog = xini_file["系统配置"]["本地日志"];
 	LogMessage("执行路径 " + config_file, openLog);
 	std::string GameHost = (const char*)xini_file["系统配置"]["服务器IP"];
 	LogMessage("服务器IP:" + GameHost, openLog);
-	std::string exeType = (const char*)xini_file["系统配置"]["客户端版本"];
+	xini_file["系统配置"]["客户端版本"] = version;
+
+	// 获取客户端版本类型
+	std::string exeType = getExeType(version);
 	LogMessage("客户端版本:" + exeType, openLog);
 
 
@@ -54,7 +65,13 @@ static void loadConfig()
 	int Feature10 = xini_file["功能配置"]["修复领主之塔"];
 	int Feature11 = xini_file["功能配置"]["修复二觉名称乱码"];
 	//int Feature12 = xini_file["功能配置"]["默认创建缔造者"];
+	int Feature13 = xini_file["功能配置"]["本地GM"];
 
+
+	// NPC名称颜色
+	std::string NPC_Color = (const char*)xini_file["颜色配置"]["NPC名称颜色"];
+	// 角色名称颜色
+	std::string Character_Color = (const char*)xini_file["颜色配置"]["角色名称颜色"];
 
 	if (Feature1 == 1) {
 		// 开启[Ctrl+v]粘贴权限
@@ -111,11 +128,28 @@ static void loadConfig()
 		Gamex::FixCharacterName(exeType);
 		LogMessage("修复角色二觉职业名称乱码", openLog);
 	}
+	// [异常]
 	//if (Feature12 == 1) {
 	//	// 默认创建缔造者0627 @蛐蛐
 	//	Gamex::CreateCreatorMage(exeType);
 	//	LogMessage("默认创建缔造者", openLog);
 	//}
+	if (Feature13 == 1) {
+		// 本地GM
+		Gamex::LocalGM_Mode(exeType);
+		LogMessage("开启本地GM", openLog);
+	}
+
+	// 设置NPC名称颜色
+	if (!NPC_Color.empty()) {
+		Gamex::OverloadNPC_Color(exeType, NPC_Color);
+		LogMessage("设置NPC名称颜色:" + NPC_Color, openLog);
+	}
+	// 设置角色名称颜色
+	if (!Character_Color.empty()) {
+		Gamex::OverloadCharacter_Color(exeType, Character_Color);
+		LogMessage("设置角色名称颜色:" + Character_Color, openLog);
+	}
 }
 
 // 初始化
@@ -253,6 +287,51 @@ namespace Gamex {
 		if (exeType == "0627") {
 			*(char*)0x10F3338 = 11;
 			WriteJmp((void*)0x101F3341, &DefaultCharacter);
+		}
+	}
+
+	// 本地GM
+	void LocalGM_Mode(std::string exeType) {
+		if (exeType == "0627") {
+			// 原始 55 8B EC 51 81 C1 90 03 00 00   -> 03 00 00 改 02 08 09
+			memcpy((void*)0x00751830, "\x55\x8B\xEC\x51\x81\xC1\x90\x02\x08\x09", 10);
+			// 原始 81 C1 90 03 00 00 8D 45 FC 50 8D 03  -> 03 00 00 改 02 08 09
+			memcpy((void*)0x00751834, "\x81\xC1\x90\x02\x08\x09\x8D\x45\xFC\x50\x8D", 11);
+		}
+	}
+
+	// 设置NPC名称颜色
+	void OverloadNPC_Color(std::string exeType, std::string NPC_Color) {
+		if (exeType == "0627") {
+			// NPC名称颜色  默认颜色 E6 C8 9B FF
+			// memcpy((void*)0x007E9279, "\x39\x96\x5b", 3);
+			// BYTE cAddr[3] = { 0xF3, 0x4B, 0x7D };
+			// dx.Writes(0x007E9279, static_cast<const void*>(cAddr), sizeof(cAddr));
+
+			std::vector<uint8_t> colorBytes = hexStringToByteArray(NPC_Color);
+			if (colorBytes.size() == 3) {
+				BYTE cAddr[3] = { 0 };
+				for (size_t i = 0; i < 3; ++i) {
+					cAddr[i] = colorBytes[i];
+				}
+				dx.Writes(0x007E9279, static_cast<const void*>(cAddr), sizeof(cAddr));
+			}
+		}
+	}
+
+	// 设置角色名称颜色[CE可HOOK颜色，推测需要角色登录后处理]
+	void OverloadCharacter_Color(std::string exeType, std::string Character_Color) {
+		if (exeType == "0627") {
+			// 角色名称颜色  默认颜色 FF FF FF FF
+			std::vector<uint8_t> characterBytes = hexStringToByteArray(Character_Color);
+			if (characterBytes.size() == 3) {
+				BYTE chAddr[3] = { 0 };
+				for (size_t i = 0; i < 3; ++i) {
+					chAddr[i] = characterBytes[i];
+				}
+				dx.Writes(0x00805B78, static_cast<const void*>(chAddr), sizeof(chAddr));
+				dx.Writes(0x00806439, static_cast<const void*>(chAddr), sizeof(chAddr));
+			}
 		}
 	}
 };
