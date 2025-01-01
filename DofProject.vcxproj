@@ -149,7 +149,9 @@
     <ClInclude Include="Hook.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Memory.h" />
+    <ClInclude Include="Mosaic.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SkilSlot.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="xini_file.h" />
   </ItemGroup>

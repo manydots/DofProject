@@ -5,6 +5,8 @@
 #include "FastCall.h"
 #include "Logger.h"
 #include "xini_file.h"
+#include "Mosaic.h"
+#include "SkilSlot.h"
 
 // 创建读写类
 Memory dx;
@@ -25,6 +27,7 @@ static void loadConfig()
 		xini_file["系统配置"]["本地日志"] = 0;
 
 		xini_file["功能配置"]["本地GM"] = 0;
+		xini_file["功能配置"]["装备镶嵌"] = 0;
 		xini_file["功能配置"]["文本粘贴权限"] = 1;
 		xini_file["功能配置"]["邮件GM标识"] = 1;
 		xini_file["功能配置"]["关闭回购商店"] = 1;
@@ -36,10 +39,18 @@ static void loadConfig()
 		xini_file["功能配置"]["缩放优化"] = 0;
 		xini_file["功能配置"]["修复领主之塔"] = 1;
 		xini_file["功能配置"]["修复二觉名称乱码"] = 0;
-		//xini_file["功能配置"]["默认创建缔造者"] = 0;
+		xini_file["功能配置"]["默认创建缔造者"] = 0;
 
 		xini_file["颜色配置"]["角色名称颜色"] = "#FFFFFF";
 		xini_file["颜色配置"]["NPC名称颜色"] = "#E6C89B";
+
+		xini_file["键位配置"]["启用"] = 0;
+		xini_file["键位配置"]["1键CodeKey"] = 55; // 顶部键盘"7"
+		xini_file["键位配置"]["1槽位X轴"] = 718;
+		xini_file["键位配置"]["1槽位Y轴"] = 520;
+		xini_file["键位配置"]["2键CodeKey"] = 56; // 顶部键盘"8"
+		xini_file["键位配置"]["2槽位X轴"] = 718;
+		xini_file["键位配置"]["2槽位Y轴"] = 558;
 	}
 
 	int openLog = xini_file["系统配置"]["本地日志"];
@@ -64,8 +75,18 @@ static void loadConfig()
 	int Feature9 = xini_file["功能配置"]["缩放优化"];
 	int Feature10 = xini_file["功能配置"]["修复领主之塔"];
 	int Feature11 = xini_file["功能配置"]["修复二觉名称乱码"];
-	//int Feature12 = xini_file["功能配置"]["默认创建缔造者"];
+	int Feature12 = xini_file["功能配置"]["默认创建缔造者"];
 	int Feature13 = xini_file["功能配置"]["本地GM"];
+	int Feature14 = xini_file["功能配置"]["装备镶嵌"];
+
+	int Feature15 = xini_file["键位配置"]["启用"];
+	int keyCode1 = xini_file["键位配置"]["1键CodeKey"];
+	int keyCode2 = xini_file["键位配置"]["2键CodeKey"];
+
+	int keyCode1x = xini_file["键位配置"]["1槽位X轴"];
+	int keyCode1y = xini_file["键位配置"]["1槽位Y轴"];
+	int keyCode2x = xini_file["键位配置"]["2槽位X轴"];
+	int keyCode2y = xini_file["键位配置"]["2槽位Y轴"];
 
 
 	// NPC名称颜色
@@ -128,16 +149,29 @@ static void loadConfig()
 		Gamex::FixCharacterName(exeType);
 		LogMessage("修复角色二觉职业名称乱码", openLog);
 	}
-	// [异常]
-	//if (Feature12 == 1) {
-	//	// 默认创建缔造者0627 @蛐蛐
-	//	Gamex::CreateCreatorMage(exeType);
-	//	LogMessage("默认创建缔造者", openLog);
-	//}
+	if (Feature12 == 1) {
+		// 默认创建缔造者0627 @蛐蛐
+		Gamex::CreateCreatorMage(exeType);
+		LogMessage("默认创建缔造者", openLog);
+	}
 	if (Feature13 == 1) {
 		// 本地GM
 		Gamex::LocalGM_Mode(exeType);
 		LogMessage("开启本地GM", openLog);
+	}
+	if (Feature14 == 1) {
+		// 装备+时装镶嵌
+		if (exeType == "0627") {
+			Mosaic_0627();
+			LogMessage("真·装备时装镶嵌", openLog);
+		}
+	}
+	if (Feature15 == 1) {
+		// 14技能栏
+		if (exeType == "0627") {
+			SkilSlot_0627(keyCode1, keyCode2, keyCode1x, keyCode1y, keyCode2x, keyCode2y);
+			LogMessage("真·14技能栏,同步修改PVF + Frida", openLog);
+		}
 	}
 
 	// 设置NPC名称颜色
@@ -286,7 +320,7 @@ namespace Gamex {
 	void CreateCreatorMage(std::string exeType) {
 		if (exeType == "0627") {
 			*(char*)0x10F3338 = 11;
-			WriteJmp((void*)0x101F3341, &DefaultCharacter);
+			WriteJmp((void*)0x010F3341, &DefaultCharacter);
 		}
 	}
 
