@@ -588,14 +588,20 @@ void __fastcall SkilSlot_0627(int keyCode1, int keyCode2, int keyCode1x, int key
 	常规角色路径：clientonly/hotkeysystem.co
 	缔造角色路径：clientonly/hotkeysystemforcreator.co
 
+	备注:
+	`扩展技能快速键 7`	---[56] HookKey1
+	`dungeon`
+	`right`	17 ---[17] &L_Ctrl
+	`right`	18 ---[18] &L_Alt
+
 	[key]
 	`扩展技能快速键 7`	55
 	`dungeon`
-	`right`	55
+	`right`	17
 
 	[key]
 	`扩展技能快速键 8`	56
 	`dungeon`
-	`right`	56
+	`right`	18
 	*/
 }

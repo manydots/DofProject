@@ -45,12 +45,12 @@ static void loadConfig()
 		xini_file["颜色配置"]["NPC名称颜色"] = "#E6C89B";
 
 		xini_file["键位配置"]["启用"] = 0;
-		xini_file["键位配置"]["1键CodeKey"] = 55; // 顶部键盘"7"
-		xini_file["键位配置"]["1槽位X轴"] = 718;
-		xini_file["键位配置"]["1槽位Y轴"] = 520;
-		xini_file["键位配置"]["2键CodeKey"] = 56; // 顶部键盘"8"
-		xini_file["键位配置"]["2槽位X轴"] = 718;
-		xini_file["键位配置"]["2槽位Y轴"] = 558;
+		xini_file["键位配置"]["HookKey1"] = 55; // Hook菜单ID
+		xini_file["键位配置"]["1键X轴"] = 718;
+		xini_file["键位配置"]["1键Y轴"] = 520;
+		xini_file["键位配置"]["HookKey2"] = 56; // Hook菜单ID
+		xini_file["键位配置"]["2键X轴"] = 718;
+		xini_file["键位配置"]["2键Y轴"] = 558;
 	}
 
 	int openLog = xini_file["系统配置"]["本地日志"];
@@ -80,13 +80,13 @@ static void loadConfig()
 	int Feature14 = xini_file["功能配置"]["装备镶嵌"];
 
 	int Feature15 = xini_file["键位配置"]["启用"];
-	int keyCode1 = xini_file["键位配置"]["1键CodeKey"];
-	int keyCode2 = xini_file["键位配置"]["2键CodeKey"];
+	int keyCode1 = xini_file["键位配置"]["HookKey1"];
+	int keyCode2 = xini_file["键位配置"]["HookKey2"];
 
-	int keyCode1x = xini_file["键位配置"]["1槽位X轴"];
-	int keyCode1y = xini_file["键位配置"]["1槽位Y轴"];
-	int keyCode2x = xini_file["键位配置"]["2槽位X轴"];
-	int keyCode2y = xini_file["键位配置"]["2槽位Y轴"];
+	int keyCode1x = xini_file["键位配置"]["1键X轴"];
+	int keyCode1y = xini_file["键位配置"]["1键Y轴"];
+	int keyCode2x = xini_file["键位配置"]["2键X轴"];
+	int keyCode2y = xini_file["键位配置"]["2键Y轴"];
 
 
 	// NPC名称颜色

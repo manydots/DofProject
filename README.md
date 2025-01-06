@@ -46,12 +46,12 @@ xini_file["颜色配置"]["角色名称颜色"] = "#FFFFFF";
 xini_file["颜色配置"]["NPC名称颜色"] = "#E6C89B";
 
 xini_file["键位配置"]["启用"] = 0;
-xini_file["键位配置"]["1键CodeKey"] = 55; // 顶部键盘"7"
-xini_file["键位配置"]["1槽位X轴"] = 718;
-xini_file["键位配置"]["1槽位Y轴"] = 520;
-xini_file["键位配置"]["2键CodeKey"] = 56; // 顶部键盘"8"
-xini_file["键位配置"]["2槽位X轴"] = 718;
-xini_file["键位配置"]["2槽位Y轴"] = 558;
+xini_file["键位配置"]["HookKey1"] = 55; // Hook菜单ID
+xini_file["键位配置"]["1键X轴"] = 718;
+xini_file["键位配置"]["1键Y轴"] = 520;
+xini_file["键位配置"]["HookKey2"] = 56; // Hook菜单ID
+xini_file["键位配置"]["2键X轴"] = 718;
+xini_file["键位配置"]["2键Y轴"] = 558;
 ```
 
 #### 其他资源
@@ -60,6 +60,10 @@ xini_file["键位配置"]["2槽位Y轴"] = 558;
 
 #### 更新日志
 
+##### 2025-01-06
+
+- 修正键位配置描述(删除 dof.ini 重新生成)
+
 ##### 2025-01-01
 
 - 真·14 键位配置(自定义 2 键坐标、KeyCode，开启后必须同步修改 PVF + Frida) 已知问题: 偶发卡顿、修改键位坐标后首次进入游戏偶发崩溃、所有角色共用一套拓展键位
@@ -67,7 +71,7 @@ xini_file["键位配置"]["2槽位Y轴"] = 558;
 
 ```js
 // 注意: 14键源码中 _627_Hook_4CDCDC push顺序导致坐标是反的
-// 默认绑定 55 顶部数字键盘“7”   56 - 顶部数字键盘“8”
+// 默认HookKey 55/56  17:L_Ctrl 18:L_Alt
 
 // Frida 修改
 Memory.protect(ptr(0x08604b1e), 4, "rwx");
@@ -85,15 +89,23 @@ ptr(0x0860511c).writeByteArray([0xc7, 0x45, 0xe8, 0x08, 0x00, 0x00, 0x00]);
 // 常规角色路径：clientonly/hotkeysystem.co
 // 缔造角色路径：clientonly/hotkeysystemforcreator.co
 
+// 备注:
+`扩展技能快速键 7`	---[55] HookKey1
+`扩展技能快速键 8`	---[56] HookKey1
+`dungeon`
+`right`	17 ---[17] &L_Ctrl
+`right`	18 ---[18] &L_Alt
+
+
 [key]
 `扩展技能快速键 7`	55
 `dungeon`
-`right`	55
+`right`	17
 
 [key]
 `扩展技能快速键 8`	56
 `dungeon`
-`right`	56
+`right`	18
 ```
 
 ##### 2024-12-31

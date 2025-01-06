@@ -6,8 +6,9 @@ D:\dp2\DofProject\SkilSlot.h(104,1): warning C4102: “labnlR”: 未引用的�
   (编译源文件“Gamex.cpp”)
   
   正在生成代码
-  0 of 1064 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+D:\dp2\DofProject\Mosaic.h(478): warning C4733: 内联 asm 分配到“FS:0”: 处理程序未注册为安全处理程序
+D:\dp2\DofProject\Mosaic.h(572): warning C4733: 内联 asm 分配到“FS:0”: 处理程序未注册为安全处理程序
+  All 1064 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   已完成代码的生成
   DofProject.vcxproj -> D:\dp2\DofProject\Release\DofProject.dll
