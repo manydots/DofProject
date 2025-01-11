@@ -1,7 +1,5 @@
 #pragma once
-#include "dof.h"
 #include "Hook.h"
-
 
 INT INSER_DATA = (INT)malloc(1024);
 INT INSER_TOP = (INT)malloc(1024);

@@ -134,3 +134,54 @@ Naked void DefaultCharacter() {
 		jmp pfCha_ret
 	}
 }
+
+// 0627 HOOK聊天消息
+using _send_gcommand = INT(*)(PCWCHAR str);
+const _send_gcommand send_gcommand = (_send_gcommand)0x951620;
+INT sendCommand(PCWCHAR str, INT type)
+{
+	//wchar_t buffer[64];
+	//formatAndConcat(buffer, _countof(buffer), L"CALL你好", characterName);
+	//send_notice(L"CALL", rgb(249, 38, 114), 37);
+	//LogMessage(characterName, 1);
+	/*char* pNewBuffer = UnicodeToAnsi(characterName);
+	LogMessage(pNewBuffer, 1);*/
+
+	// 输出日志(客户端输入内容)
+	LogMessage(str, 1);
+	// 判断str前两个字符是否等于'//'相等返回0
+	if (wcsncmp(L"//", str, 2) == 0)
+	{
+		// TEST 获取角色名称
+		if (wcsncmp(L"//GET NAME", str, 10) == 0) {
+			TCHAR characterName[64] = { 0 };
+			ReadMemoryBytes(characterName, readVal(readVal(CHARACTER_BASE) + 0x258), 32);
+			//ReadMemoryBytes(characterName, ReadDWORD(ReadDWORD(CHARACTER_BASE) + 0x258), 32);
+			wchar_t buffer[64];
+			formatAndConcatSafe(buffer, sizeof(buffer), L"CALL %ls", characterName);
+			// #f92672
+			GameCall::SendText(buffer, rgb(249, 38, 114), 37);
+			return 1;
+		}
+
+		// TEST 喊话内容（//SHOUT [内容]）
+		if (wcsncmp(L"//SHOUT", str, 7) == 0) {
+			size_t length = std::wcslen(str);
+			// 创建一个std::wstring对象
+			std::wstring wstr(str, length);
+			std::wstring _str = wstr.substr(7);
+			const wchar_t* pwchar_str = _str.c_str();
+			GameCall::Shout(pwchar_str);
+			return 1;
+		}
+
+		return send_gcommand(str);
+	}
+
+	//if (!wcsncmp(L"//dofile ", str, 9))
+	//{
+	//	// TODO
+	//	return 1;
+	//}
+	return send_gcommand(str);
+}

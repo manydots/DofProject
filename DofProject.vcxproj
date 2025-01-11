@@ -143,8 +143,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="dof.h" />
     <ClInclude Include="FastCall.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Gamex.h" />
     <ClInclude Include="Hook.h" />
     <ClInclude Include="Logger.h" />
@@ -157,9 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gamex.cpp" />
     <ClCompile Include="Hook.cpp" />
-    <ClCompile Include="Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DofProject.rc" />

@@ -1,5 +1,6 @@
+#pragma once
 #include "Hook.h"
-#include <windows.h>
+
 void WriteJmp(void* pfn, void* pCallback) {
 	DWORD pTmp = NULL;
 	VirtualProtect(pfn, 5, PAGE_EXECUTE_READWRITE, &pTmp);

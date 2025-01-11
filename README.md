@@ -26,8 +26,9 @@ xini_file_t xini_file(config_file); // 初始化配置文件读写类
 xini_file["系统配置"]["服务器IP"] = "192.168.200.131";
 xini_file["系统配置"]["客户端版本"] = version;
 xini_file["系统配置"]["本地日志"] = 0;
+xini_file["系统配置"]["HOOK聊天消息"] = 0;
 
-xini_file["功能配置"]["本地GM"] = 0;
+xini_file["功能配置"]["本地GM"] = 0; // 建议关闭
 xini_file["功能配置"]["装备镶嵌"] = 0;
 xini_file["功能配置"]["文本粘贴权限"] = 1;
 xini_file["功能配置"]["邮件GM标识"] = 1;
@@ -42,8 +43,9 @@ xini_file["功能配置"]["修复领主之塔"] = 1;
 xini_file["功能配置"]["修复二觉名称乱码"] = 0;
 xini_file["功能配置"]["默认创建缔造者"] = 0;
 
+xini_file["颜色配置"]["启用"] = 0;
 xini_file["颜色配置"]["角色名称颜色"] = "#FFFFFF";
-xini_file["颜色配置"]["NPC名称颜色"] = "#E6C89B";
+xini_file["颜色配置"]["NPC名称颜色"] = "#E6C89B"; // Hook
 
 xini_file["键位配置"]["启用"] = 0;
 xini_file["键位配置"]["HookKey1"] = 55; // Hook菜单ID
@@ -58,7 +60,20 @@ xini_file["键位配置"]["2键Y轴"] = 558;
 
 - [Visual Studio 2022](https://visualstudio.microsoft.com/zh-hans/downloads/)
 
+#### 已发现问题
+
+- 本地 GM 开启后游戏启动崩溃几率很大，建议关闭
+
 #### 更新日志
+
+##### 2025-01-11
+
+- Hook 客户端消息输入(//指令)
+- 获取角色名称(//GET NAME)
+- 喊话内容(//SHOUT 喊话内容)
+- 颜色配置增加启用配置
+- 本地 GM 开启后游戏启动崩溃几率很大，建议关闭
+- 调整代码结构
 
 ##### 2025-01-06
 
@@ -90,8 +105,8 @@ ptr(0x0860511c).writeByteArray([0xc7, 0x45, 0xe8, 0x08, 0x00, 0x00, 0x00]);
 // 缔造角色路径：clientonly/hotkeysystemforcreator.co
 
 // 备注:
-`扩展技能快速键 7`	---[55] HookKey1
-`扩展技能快速键 8`	---[56] HookKey1
+`扩展技能快速键 7`	55 ---[55] HookKey1
+`扩展技能快速键 8`	56 ---[56] HookKey2
 `dungeon`
 `right`	17 ---[17] &L_Ctrl
 `right`	18 ---[18] &L_Alt

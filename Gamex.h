@@ -1,13 +1,8 @@
 #pragma once
-#include <iostream>
 #include "dof.h"
-
 
 namespace Gamex
 {
-	//#define _v(v1,v2) ((v1|v2)<<8)
-	//#define rgb(r,g,b) ((BYTE)r|_v((BYTE)g,_v((BYTE)b,0xFFFFFF00)))
-	//#define rgba(r,g,b,a) ((BYTE)r|_v((BYTE)g,_v((BYTE)b,(BYTE)a<<8)))
 
 	/**
 	 *
@@ -22,7 +17,7 @@ namespace Gamex
 	 *
 	 * */
 	void DLL_Main();
-
+	void CommandHook(std::string exeType);
 	void FixPackage(std::string exeType);
 	void DisableBuyback(std::string exeType);
 	void SetClipboardData(std::string exeType);

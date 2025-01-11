@@ -1,15 +1,13 @@
 #pragma once
 #include "Gamex.h"
-#include "Memory.h"
-#include "Hook.h"
+#include "Game.h"
 #include "FastCall.h"
-#include "Logger.h"
-#include "xini_file.h"
 #include "Mosaic.h"
 #include "SkilSlot.h"
 
 // 创建读写类
 Memory dx;
+
 
 // 载入配置
 static void loadConfig()
@@ -25,8 +23,9 @@ static void loadConfig()
 		xini_file["系统配置"]["服务器IP"] = "192.168.200.131";
 		xini_file["系统配置"]["客户端版本"] = version;
 		xini_file["系统配置"]["本地日志"] = 0;
+		xini_file["系统配置"]["HOOK聊天消息"] = 0;
 
-		xini_file["功能配置"]["本地GM"] = 0;
+		xini_file["功能配置"]["本地GM"] = 0; // 建议关闭
 		xini_file["功能配置"]["装备镶嵌"] = 0;
 		xini_file["功能配置"]["文本粘贴权限"] = 1;
 		xini_file["功能配置"]["邮件GM标识"] = 1;
@@ -41,8 +40,9 @@ static void loadConfig()
 		xini_file["功能配置"]["修复二觉名称乱码"] = 0;
 		xini_file["功能配置"]["默认创建缔造者"] = 0;
 
+		xini_file["颜色配置"]["启用"] = 0;
 		xini_file["颜色配置"]["角色名称颜色"] = "#FFFFFF";
-		xini_file["颜色配置"]["NPC名称颜色"] = "#E6C89B";
+		xini_file["颜色配置"]["NPC名称颜色"] = "#E6C89B"; // Hook
 
 		xini_file["键位配置"]["启用"] = 0;
 		xini_file["键位配置"]["HookKey1"] = 55; // Hook菜单ID
@@ -62,7 +62,6 @@ static void loadConfig()
 	// 获取客户端版本类型
 	std::string exeType = getExeType(version);
 	LogMessage("客户端版本:" + exeType, openLog);
-
 
 	int Feature1 = xini_file["功能配置"]["文本粘贴权限"];
 	int Feature2 = xini_file["功能配置"]["邮件GM标识"];
@@ -88,7 +87,8 @@ static void loadConfig()
 	int keyCode2x = xini_file["键位配置"]["2键X轴"];
 	int keyCode2y = xini_file["键位配置"]["2键Y轴"];
 
-
+	int Feature30 = xini_file["系统配置"]["HOOK聊天消息"];
+	int Feature40 = xini_file["颜色配置"]["启用"];
 	// NPC名称颜色
 	std::string NPC_Color = (const char*)xini_file["颜色配置"]["NPC名称颜色"];
 	// 角色名称颜色
@@ -175,14 +175,18 @@ static void loadConfig()
 	}
 
 	// 设置NPC名称颜色
-	if (!NPC_Color.empty()) {
+	if (!NPC_Color.empty() && Feature40 == 1) {
 		Gamex::OverloadNPC_Color(exeType, NPC_Color);
 		LogMessage("设置NPC名称颜色:" + NPC_Color, openLog);
 	}
 	// 设置角色名称颜色
-	if (!Character_Color.empty()) {
+	if (!Character_Color.empty() && Feature40 == 1) {
 		Gamex::OverloadCharacter_Color(exeType, Character_Color);
 		LogMessage("设置角色名称颜色:" + Character_Color, openLog);
+	}
+	// HOOK聊天消息
+	if (Feature30 == 1) {
+		Gamex::CommandHook(exeType);
 	}
 }
 
@@ -328,9 +332,22 @@ namespace Gamex {
 	void LocalGM_Mode(std::string exeType) {
 		if (exeType == "0627") {
 			// 原始 55 8B EC 51 81 C1 90 03 00 00   -> 03 00 00 改 02 08 09
-			memcpy((void*)0x00751830, "\x55\x8B\xEC\x51\x81\xC1\x90\x02\x08\x09", 10);
+			// memcpy((void*)0x00751830, "\x55\x8B\xEC\x51\x81\xC1\x90\x02\x08\x09", 10);
+			RtlCopyMemory((LPVOID)0x00751830, "\x55\x8B\xEC\x51\x81\xC1\x90\x02\x08\x09", 10);
 			// 原始 81 C1 90 03 00 00 8D 45 FC 50 8D 03  -> 03 00 00 改 02 08 09
-			memcpy((void*)0x00751834, "\x81\xC1\x90\x02\x08\x09\x8D\x45\xFC\x50\x8D", 11);
+			// memcpy((void*)0x00751834, "\x81\xC1\x90\x02\x08\x09\x8D\x45\xFC\x50\x8D", 11);
+			RtlCopyMemory((LPVOID)0x00751834, "\x81\xC1\x90\x02\x08\x09\x8D\x45\xFC\x50\x8D", 11);
+		}
+	}
+
+	// HOOK聊天消息(是否区分客户端版本?)
+	void CommandHook(std::string exeType)
+	{
+		if (exeType == "0627") {
+			// 95C103 - E8 0859FFFF - call DNF.exe+551A10
+			BYTE hookedBytes[5] = { 0xE8,0x90,0x90,0x90,0x90 };
+			*(DWORD*)(hookedBytes + 1) = (DWORD)sendCommand - (DWORD)0x95C103 - 5;
+			WriteProcessMemory(INVALID_HANDLE_VALUE, (LPVOID)0x95C103, hookedBytes, 5, NULL);
 		}
 	}
 
@@ -342,14 +359,9 @@ namespace Gamex {
 			// BYTE cAddr[3] = { 0xF3, 0x4B, 0x7D };
 			// dx.Writes(0x007E9279, static_cast<const void*>(cAddr), sizeof(cAddr));
 
-			std::vector<uint8_t> colorBytes = hexStringToByteArray(NPC_Color);
-			if (colorBytes.size() == 3) {
-				BYTE cAddr[3] = { 0 };
-				for (size_t i = 0; i < 3; ++i) {
-					cAddr[i] = colorBytes[i];
-				}
-				dx.Writes(0x007E9279, static_cast<const void*>(cAddr), sizeof(cAddr));
-			}
+			// 获取vector颜色BYTE
+			std::vector<BYTE> vectorColors = VectorToBytes(NPC_Color);
+			WriteVectorBytes((void*)0x007E9279, vectorColors);
 		}
 	}
 
@@ -369,3 +381,4 @@ namespace Gamex {
 		}
 	}
 };
+

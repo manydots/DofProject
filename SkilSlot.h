@@ -1,5 +1,4 @@
 #pragma once
-#include "dof.h"
 #include "Hook.h"
 
 Naked void _627_Hook_916024() {
@@ -589,7 +588,8 @@ void __fastcall SkilSlot_0627(int keyCode1, int keyCode2, int keyCode1x, int key
 	缔造角色路径：clientonly/hotkeysystemforcreator.co
 
 	备注:
-	`扩展技能快速键 7`	---[56] HookKey1
+	`扩展技能快速键 7`	55 ---[55] HookKey1
+	`扩展技能快速键 8`	56 ---[56] HookKey2
 	`dungeon`
 	`right`	17 ---[17] &L_Ctrl
 	`right`	18 ---[18] &L_Alt
