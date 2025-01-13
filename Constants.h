@@ -6,6 +6,7 @@
 const UINT CHARACTER_BASE = 0x1AB7CDC; // 人物基址 + 偏移258（名称）
 const UINT SHOP_BASE = 0x1A5FB20; // 商店基址(窗口CALL基址?)
 const UINT NOTICE_CALL = 0x9536C0; // 公告CALL(喇叭基址)
+const UINT PACKAGE_CALL = 0x744CD0; // 收包头CALL
 
 const UINT SEND_BASE = 0x1AEB6E4; // 发包基址
 const UINT CACHE_CALL = 0x1127D60; // 缓冲CALL

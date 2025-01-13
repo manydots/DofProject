@@ -41,6 +41,6 @@ const _game_shout game_shout = (_game_shout)SHOUT_CALL;
 namespace GameCall {
 	// 发送文本call   type 14喇叭公告  17系统公告 37个人公告
 	void SendText(PCWCHAR str, INT rgb, INT type);
-	// 喊话
-	void Shout(PCWCHAR str, INT type = 13);
+	// 喊话  type 3附近人 1悄悄话（交易对话） 喇叭11 师徒8  工会6
+	void Shout(PCWCHAR str, INT type = 3);
 }

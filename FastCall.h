@@ -149,6 +149,8 @@ INT sendCommand(PCWCHAR str, INT type)
 
 	// 输出日志(客户端输入内容)
 	LogMessage(str, 1);
+	// 输出控制台日志
+	LogMessage(UnicodeToAnsi(str));
 	// 判断str前两个字符是否等于'//'相等返回0
 	if (wcsncmp(L"//", str, 2) == 0)
 	{

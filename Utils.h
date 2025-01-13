@@ -1,5 +1,8 @@
 #pragma once
 #include "dof.h"
+#include <fcntl.h>
+#include <io.h>
+#include <intrin.h>
 
 inline  uint8_t hexToByte(const std::string& hex)
 {
@@ -109,4 +112,54 @@ inline void formatAndConcatSafe(wchar_t* buffer, size_t bufferSizeInBytes, const
 		wprintf(L"Output may have been truncated due to insufficient buffer size.\n");
 	}
 	va_end(args);
+}
+
+// wchar_t转char
+//inline std::string WCharToChar(const wchar_t* wstr) {
+//	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+//	return converter.to_bytes(wstr);
+//}
+
+// 创建控制台
+inline void CreateConsle()
+{
+	HWND consoleWindowHandle = NULL;
+	// 创建一个新的控制台
+	if (AllocConsole()) {
+		// 获取新创建的控制台窗口句柄
+		consoleWindowHandle = GetConsoleWindow();
+		if (consoleWindowHandle != NULL) {
+			// 打印控制台窗口句柄
+			printf("Console window handle: %p\n", consoleWindowHandle);
+		}
+		else {
+			printf("Failed to get console window handle.\n");
+		}
+	}
+	else {
+		printf("Failed to create a console.\n");
+	}
+	// 设置控制台输出的代码页为 UTF-8 (65001)
+	// 设置控制台输出的代码页为 GBK (CP936)
+	// SetConsoleOutputCP(936);
+
+	// 重新绑定标准输入、输出和错误流
+	FILE* stream;
+	freopen_s(&stream, "CONOUT$", "w", stdout);
+	freopen_s(&stream, "CONOUT$", "w", stderr);
+	freopen_s(&stream, "CONIN$", "r", stdin);
+
+	// 将标准流模式设置为二进制模式
+	int _s1 = _setmode(_fileno(stdout), _O_BINARY);
+	int _s2 = _setmode(_fileno(stdin), _O_BINARY);
+	int _s3 = _setmode(_fileno(stderr), _O_BINARY);
+
+	// 测试输出
+	printf("Console allocated successfully!\n");
+}
+
+inline void Cleanup() {
+	// 执行清理操作，如解除钩子、关闭控制台等
+	// 例如，关闭控制台：
+	FreeConsole();
 }

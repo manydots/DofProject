@@ -21,6 +21,6 @@ D:\dp2\DofProject\SkilSlot.h(103,1): warning C4102: “labnlR”: 未引用的�
   Previous IPDB not found, fall back to full compilation.
 D:\dp2\DofProject\Mosaic.h(476): warning C4733: 内联 asm 分配到“FS:0”: 处理程序未注册为安全处理程序
 D:\dp2\DofProject\Mosaic.h(570): warning C4733: 内联 asm 分配到“FS:0”: 处理程序未注册为安全处理程序
-  All 1116 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  All 1122 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   已完成代码的生成
   DofProject.vcxproj -> D:\dp2\DofProject\Release\DofProject.dll

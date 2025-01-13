@@ -54,14 +54,21 @@ static void loadConfig()
 	}
 
 	int openLog = xini_file["系统配置"]["本地日志"];
-	LogMessage("执行路径 " + config_file, openLog);
+
+	if (openLog == 1) {
+		CreateConsle();
+	}
+
+	LogMessage("执行路径 %s", config_file);
 	std::string GameHost = (const char*)xini_file["系统配置"]["服务器IP"];
 	LogMessage("服务器IP:" + GameHost, openLog);
+	LogMessage("服务器IP:%s", GameHost.c_str());
 	xini_file["系统配置"]["客户端版本"] = version;
 
 	// 获取客户端版本类型
 	std::string exeType = getExeType(version);
 	LogMessage("客户端版本:" + exeType, openLog);
+	LogMessage("客户端版本:%s", exeType.c_str());
 
 	int Feature1 = xini_file["功能配置"]["文本粘贴权限"];
 	int Feature2 = xini_file["功能配置"]["邮件GM标识"];
@@ -97,92 +104,92 @@ static void loadConfig()
 	if (Feature1 == 1) {
 		// 开启[Ctrl+v]粘贴权限
 		Gamex::SetClipboardData(exeType);
-		LogMessage("开启[Ctrl+v]粘贴权限", openLog);
+		LogMessage("开启[Ctrl+v]粘贴权限");
 	}
 	if (Feature2 == 1) {
 		// 开启台服DNF邮件GM标识
 		Gamex::FixGMofMail(exeType);
-		LogMessage("开启台服DNF邮件GM标识", openLog);
+		LogMessage("开启台服DNF邮件GM标识");
 	}
 	if (Feature3 == 1) {
 		// 关闭NPC重新回购
 		Gamex::DisableBuyback(exeType);
-		LogMessage("关闭NPC重新回购", openLog);
+		LogMessage("关闭NPC重新回购");
 	}
 	if (Feature4 == 1) {
 		// 技能栏默认显示技能名称
 		Gamex::ShowSkillName(exeType);
-		LogMessage("技能栏默认显示技能名称", openLog);
+		LogMessage("技能栏默认显示技能名称");
 	}
 	if (Feature5 == 1) {
 		// 修复233包头异常
 		Gamex::FixPackage(exeType);
-		LogMessage("修复233包头异常", openLog);
+		LogMessage("修复233包头异常");
 	}
 	if (Feature6 == 1) {
 		// 修复 "//移动物品" 命令至脚下
 		Gamex::FixItemPosCMD(exeType);
-		LogMessage("修复‘//移动物品’命令至脚下", openLog);
+		LogMessage("修复‘//移动物品’命令至脚下");
 	}
 	if (Feature7 == 1) {
 		// 修复字母‘R’&‘I’
 		Gamex::FixLetterText(exeType);
-		LogMessage("修复字母‘R’&‘I’", openLog);
+		LogMessage("修复字母‘R’&‘I’");
 	}
 	if (Feature8 == 1) {
 		// 禁用启动游戏时最小化其他窗口 @光头大佬
 		Gamex::DisableOtherWinMin(exeType);
-		LogMessage("禁用启动游戏时最小化其他窗口", openLog);
+		LogMessage("禁用启动游戏时最小化其他窗口");
 	}
 	if (Feature9 == 1) {
 		// 缩放优化(取消[use zoom rate]标签镜头跟随) 感觉不明显
 		Gamex::FreeZoomRate(exeType);
-		LogMessage("缩放优化(取消[use zoom rate]标签镜头跟随)", openLog);
+		LogMessage("缩放优化(取消[use zoom rate]标签镜头跟随)");
 	}
 	if (Feature10 == 1) {
 		// 修复领主之塔 
 		Gamex::FixLordTower(exeType);
-		LogMessage("修复领主之塔通关返回城镇摆摊或分解机崩溃&结算音效多次播放BUG", openLog);
+		LogMessage("修复领主之塔通关返回城镇摆摊或分解机崩溃&结算音效多次播放BUG");
 	}
 	if (Feature11 == 1) {
 		// 修复角色二觉职业名称乱码
 		Gamex::FixCharacterName(exeType);
-		LogMessage("修复角色二觉职业名称乱码", openLog);
+		LogMessage("修复角色二觉职业名称乱码");
 	}
 	if (Feature12 == 1) {
 		// 默认创建缔造者0627 @蛐蛐
 		Gamex::CreateCreatorMage(exeType);
-		LogMessage("默认创建缔造者", openLog);
+		LogMessage("默认创建缔造者");
 	}
 	if (Feature13 == 1) {
 		// 本地GM
 		Gamex::LocalGM_Mode(exeType);
-		LogMessage("开启本地GM", openLog);
+		LogMessage("开启本地GM");
 	}
 	if (Feature14 == 1) {
 		// 装备+时装镶嵌
 		if (exeType == "0627") {
 			Mosaic_0627();
-			LogMessage("真·装备时装镶嵌", openLog);
+			LogMessage("真·装备时装镶嵌");
 		}
 	}
 	if (Feature15 == 1) {
 		// 14技能栏
 		if (exeType == "0627") {
 			SkilSlot_0627(keyCode1, keyCode2, keyCode1x, keyCode1y, keyCode2x, keyCode2y);
-			LogMessage("真·14技能栏,同步修改PVF + Frida", openLog);
+			LogMessage("真·14技能栏,同步修改PVF + Frida");
 		}
 	}
 
 	// 设置NPC名称颜色
 	if (!NPC_Color.empty() && Feature40 == 1) {
 		Gamex::OverloadNPC_Color(exeType, NPC_Color);
-		LogMessage("设置NPC名称颜色:" + NPC_Color, openLog);
+		LogMessage("设置NPC名称颜色:%s", NPC_Color.c_str());
 	}
 	// 设置角色名称颜色
 	if (!Character_Color.empty() && Feature40 == 1) {
 		Gamex::OverloadCharacter_Color(exeType, Character_Color);
-		LogMessage("设置角色名称颜色:" + Character_Color, openLog);
+		LogMessage("设置角色名称颜色:%s", Character_Color.c_str());
 	}
 	// HOOK聊天消息
 	if (Feature30 == 1) {

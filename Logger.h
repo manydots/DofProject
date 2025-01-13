@@ -1,6 +1,15 @@
 #pragma once
 #include "dof.h"
 
+inline void LogMessage(const char* format, ...) {
+	printf("[Log][%s]", getCurrentTime().c_str());
+	va_list args;
+	va_start(args, format);
+	vprintf(format, args);
+	va_end(args);
+	printf("\n");
+}
+
 inline void LogMessage(const std::string& message, int openLog) {
 	if (openLog == 1) {
 		std::ofstream log_file;
@@ -21,7 +30,7 @@ inline void LogMessage(const std::string& message, int openLog) {
 	}
 }
 
-inline void LogMessage(const short& message, int openLog) {
+inline void LogMessage(const INT& message, int openLog) {
 	if (openLog == 1) {
 		std::ofstream log_file;
 		log_file.open("DOF.log", std::ios_base::app); // ÎÄ¼þÄ©Î²Ìí¼Ó

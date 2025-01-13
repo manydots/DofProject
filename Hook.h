@@ -19,3 +19,18 @@ inline void writeVal(UINT address, T value)
 
 void WriteJmp(void* pfn, void* pCallback);
 void WriteCall(void* pfn, void* pCallback);
+
+
+class SimpleHook
+{
+private:
+	DWORD hookedAddr = NULL;
+	BYTE hookedBytes[5] = { 0x00,0x00,0x00,0x00,0x00 };
+	BYTE hookBytes[5] = { 0xE9,0x00,0x00,0x00,0x00 };
+
+public:
+	BOOL HookByAddress(DWORD hookedFunc, DWORD myHookFunc);
+	BOOL HookByModule(LPCSTR lpModuleName, LPCSTR pszFuncName, DWORD myHookFunc);
+	BOOL UnHook();
+	BOOL ReHook();
+};

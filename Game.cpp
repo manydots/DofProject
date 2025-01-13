@@ -149,9 +149,9 @@ namespace GameCall {
 		UINT ecx = readVal(readVal(SHOP_BASE) + 0x40);
 		game_notice(ecx, 0, str, rgb, type, 0, 0, 0);
 	}
-	// 喊话
+	// 喊话   type 3附近人 1悄悄话（交易对话） 喇叭11 师徒8  工会6
 	void Shout(PCWCHAR str, INT type) {
 		UINT ecx = readVal(SHOUT_BASE);
-		game_shout(ecx, 0, str, 3, type, 0);
+		game_shout(ecx, 0, str, type, 13, 0);
 	}
 }
