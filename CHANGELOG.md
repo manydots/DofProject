@@ -1,4 +1,6 @@
-#####  [1.0.1.8](https://github.com/manydots/DofProject/releases/tag/1.0.1.8)(2025-01-13)
+##  [1.0.1.8](https://github.com/manydots/DofProject/releases/tag/1.0.1.8)
+
+##### 2025-01-13
 
 - 客户端控制台输出调试日志
 
