@@ -6,7 +6,11 @@
 const UINT CHARACTER_BASE = 0x1AB7CDC; // 人物基址 + 偏移258（名称）
 const UINT SHOP_BASE = 0x1A5FB20; // 商店基址(窗口CALL基址?)
 const UINT NOTICE_CALL = 0x9536C0; // 公告CALL(喇叭基址)
+const UINT GAME_STATE = 0x1A5FB4C; // 游戏状态基址 + 偏移 14 + 28（人物状态）
 const UINT PACKAGE_CALL = 0x744CD0; // 收包头CALL
+const UINT SIMULATE_CALL = 0x86EC60; // 模拟CALL
+const UINT SKILL_CALL1 = 0x19E31E8; // 技能参数1
+const UINT SKILL_CALL2 = 0x19E31EC; // 技能参数2
 
 const UINT SEND_BASE = 0x1AEB6E4; // 发包基址
 const UINT CACHE_CALL = 0x1127D60; // 缓冲CALL

@@ -10,6 +10,21 @@ inline void LogMessage(const char* format, ...) {
 	printf("\n");
 }
 
+// 输出宽字符串日志信息
+inline void LogMessageW(const wchar_t* buf, ...)
+{
+	wprintf(L"[Log][%ls]", getCurrentTimeW().c_str());
+
+	setlocale(LC_ALL, "");
+	wchar_t* nbuf = new wchar_t[1024];
+	va_list va;
+	va_start(va, buf);
+	vswprintf(nbuf, 1024, buf, va);
+	va_end(va);
+
+	wprintf(L"%ls\n", nbuf);
+}
+
 inline void LogMessage(const std::string& message, int openLog) {
 	if (openLog == 1) {
 		std::ofstream log_file;

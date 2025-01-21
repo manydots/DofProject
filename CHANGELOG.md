@@ -1,4 +1,17 @@
-##  [1.0.1.8](https://github.com/manydots/DofProject/releases/tag/1.0.1.8)
+## [更新记录](https://github.com/manydots/DofProject/releases)
+
+##### 2025-01-21
+
+- 默认 HOOK 缓冲 CALL、加密 CALL1、加密 CALL2、加密 CALL4
+- 开启 VEH HOOK(//HOOK)
+- 关闭 VEH HOOK(//UNHOOK)选择角色前必须手动关闭 VEH HOOK
+- 热键默认绑定 F4
+- 开启 F4 热键(//HOTKEY)
+- 关闭 F4 热键(//UNHOTKEY)
+- Hotkey.cpp 补全实现[原贴地址](https://www.52pojie.cn/thread-538578-1-1.html)
+- F4 绑定释放技能(//SKILL)
+- 释放技能（技能代码,伤害）(//SKILL 22228? 1?) 可缺省、指定技能代码、伤害；默认为男机械觉醒
+- 获取角色信息(//GET STATE)
 
 ##### 2025-01-13
 

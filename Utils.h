@@ -4,9 +4,29 @@
 #include <io.h>
 #include <intrin.h>
 
+#include <cwctype>
+
 inline  uint8_t hexToByte(const std::string& hex)
 {
 	return static_cast<uint8_t>(std::stoi(hex, nullptr, 16));
+}
+
+// 打印类型名称
+template <typename T>
+inline void printTypeName(const T&)
+{
+	if (std::is_same<T, int>::value)
+	{
+		std::cout << "Type is int" << std::endl;
+	}
+	else if (std::is_same<T, double>::value)
+	{
+		std::cout << "Type is double" << std::endl;
+	}
+	else
+	{
+		std::cout << "Unknown type" << std::endl;
+	}
 }
 
 
@@ -87,6 +107,80 @@ inline static std::string getCurrentTime() {
 	return std::string(buf);
 }
 
+// 获取当前时间的宽字符串
+inline static std::wstring getCurrentTimeW()
+{
+	std::time_t now = std::time(nullptr);
+	std::tm localTime;
+	// 使用 localtime_s 代替 localtime 以确保线程安全
+	errno_t err = localtime_s(&localTime, &now);
+	if (err != 0) {
+		// 错误处理，这里简单地抛出异常
+		throw std::runtime_error("Failed to convert time to local time.");
+	}
+
+	std::wstringstream wss;
+	// 设置区域设置以确保时间格式正确
+	wss.imbue(std::locale(""));
+	wss << std::put_time(&localTime, L"%Y-%m-%d %H:%M:%S");
+	return wss.str();
+}
+
+// 判断宽字符串是否为数字
+inline bool isNumberW(const std::wstring& str)
+{
+	for (size_t i = 0; i < str.length(); i++)
+	{
+		wchar_t ch = str[i];
+		// cwctype
+		if (!std::iswdigit(ch))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+// 过滤字符串两端的空格
+inline static std::wstring trim(const std::wstring& str)
+{
+	size_t first = str.find_first_not_of(L" ");
+	size_t last = str.find_last_not_of(L" ");
+
+	// 如果字符串全是空格或者为空，则返回空字符串
+	if (first == std::wstring::npos || last == std::wstring::npos)
+	{
+		return L"";
+	}
+
+	// 返回去除两端空格后的子字符串
+	return str.substr(first, last - first + 1);
+}
+
+// 分割宽字符串 默认以空格(L' ')分割, L','
+inline static std::vector<std::wstring> splitStrW(const std::wstring& input, wchar_t delimiter = L' ')
+{
+	std::vector<std::wstring> tokens;
+	std::wstring::size_type start = 0;
+	std::wstring::size_type end = input.find(delimiter);
+
+	while (end != std::wstring::npos)
+	{
+		tokens.push_back(input.substr(start, end - start));
+		start = end + 1;
+		end = input.find(delimiter, start);
+	}
+
+	// 添加最后一个token（如果存在）
+	if (start < input.size())
+	{
+		tokens.push_back(input.substr(start));
+	}
+
+	return tokens;
+}
+
+
 // 拼接宽字符两个
 inline void formatAndConcat(wchar_t* buffer, size_t bufferSize, const wchar_t* str1, const wchar_t* str2) {
 	// 为了简单起见，这里不检查缓冲区大小是否足够
@@ -121,7 +215,7 @@ inline void formatAndConcatSafe(wchar_t* buffer, size_t bufferSizeInBytes, const
 //}
 
 // 创建控制台
-inline void CreateConsle()
+inline void CreateConsole()
 {
 	HWND consoleWindowHandle = NULL;
 	// 创建一个新的控制台
@@ -153,6 +247,11 @@ inline void CreateConsle()
 	int _s1 = _setmode(_fileno(stdout), _O_BINARY);
 	int _s2 = _setmode(_fileno(stdin), _O_BINARY);
 	int _s3 = _setmode(_fileno(stderr), _O_BINARY);
+
+	// 设置stdout为宽字符模式
+	//_setmode(_fileno(stdout), _O_WTEXT);
+	// 设置stderr为宽字符模式
+	//_setmode(_fileno(stderr), _O_WTEXT);
 
 	// 测试输出
 	printf("Console allocated successfully!\n");

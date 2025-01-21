@@ -143,12 +143,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CLVEH.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="dof.h" />
     <ClInclude Include="FastCall.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameStruct.h" />
     <ClInclude Include="Gamex.h" />
     <ClInclude Include="Hook.h" />
+    <ClInclude Include="Hotkey.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Mosaic.h" />
@@ -158,10 +161,13 @@
     <ClInclude Include="xini_file.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CLVEH.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameStruct.cpp" />
     <ClCompile Include="Gamex.cpp" />
     <ClCompile Include="Hook.cpp" />
+    <ClCompile Include="Hotkey.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DofProject.rc" />

@@ -1,5 +1,10 @@
 #pragma once
 #include "Hook.h"
+#include "GameStruct.h"
+#include "CLVEH.h"
+#include "Hotkey.h"
+
+HOTKEY_ID vkid_F4 = 0;
 
 // 0627关闭NPC重新回购后修复线条空缺问题 @蛐蛐大佬 提供
 typedef int(__thiscall* _getLineSize_t)(uint32_t*);
@@ -135,6 +140,21 @@ Naked void DefaultCharacter() {
 	}
 }
 
+GameStruct gameStruct; // 初始化角色信息结构体
+
+
+// 断点的处理函数
+void hookCallBackFun(_EXCEPTION_POINTERS* ExceptionInfo) {
+	// EIP(当前HOOK的地址)
+	LogMessage("VEH -> EIP=%X，ECX=%X，EDX=%X，参数1=%X", ExceptionInfo->ContextRecord->Eip, ExceptionInfo->ContextRecord->Ecx, ExceptionInfo->ContextRecord->Edx, ReadDword(ExceptionInfo->ContextRecord->Esp + 4));
+}
+
+// 热键F4触发回调
+void InjectHotKey() {
+	gameStruct.ReleaseSkill();
+	LogMessage("HotKey:[%s]触发了", "F4");
+}
+
 // 0627 HOOK聊天消息
 using _send_gcommand = INT(*)(PCWCHAR str);
 const _send_gcommand send_gcommand = (_send_gcommand)0x951620;
@@ -156,15 +176,54 @@ INT sendCommand(PCWCHAR str, INT type)
 	{
 		// TEST 获取角色名称
 		if (wcsncmp(L"//GET NAME", str, 10) == 0) {
-			TCHAR characterName[64] = { 0 };
-			ReadMemoryBytes(characterName, readVal(readVal(CHARACTER_BASE) + 0x258), 32);
-			//ReadMemoryBytes(characterName, ReadDWORD(ReadDWORD(CHARACTER_BASE) + 0x258), 32);
+			// TCHAR characterName[64] = { 0 };
+			// ReadMemoryBytes(characterName, readVal(readVal(CHARACTER_BASE) + 0x258), 32);
+
 			wchar_t buffer[64];
-			formatAndConcatSafe(buffer, sizeof(buffer), L"CALL %ls", characterName);
+			formatAndConcatSafe(buffer, sizeof(buffer), L"CALL %ls", gameStruct.GetName());
 			// #f92672
 			GameCall::SendText(buffer, rgb(249, 38, 114), 37);
 			return 1;
 		}
+
+		// TEST HOOK（//HOOK）开启VEH HOOK
+		if (wcsncmp(L"//HOOK", str, 6) == 0) {
+			GameCall::SendText(L"HOOK开启成功", rgb(249, 38, 114), 37);
+
+			// 调用AddVeh添加
+			// CCLVEH::Instance()->AddVeh(const_cast<char*>("hook1"), 0, 0, SEND_CALL, 1, 0, hookCallBackFun); // 发包CALL
+			CCLVEH::Instance()->AddVeh(const_cast<char*>("hook2"), 0, 0, CACHE_CALL, 1, 0, hookCallBackFun); // 缓冲CALL
+			CCLVEH::Instance()->AddVeh(const_cast<char*>("hook3"), 0, 0, ENCRYPT_CALL1, 1, 0, hookCallBackFun); // 加密CALL1
+			CCLVEH::Instance()->AddVeh(const_cast<char*>("hook4"), 0, 0, ENCRYPT_CALL2, 1, 0, hookCallBackFun); // 加密CALL2
+			CCLVEH::Instance()->AddVeh(const_cast<char*>("hook5"), 0, 0, ENCRYPT_CALL4, 1, 0, hookCallBackFun); // 加密CALL4
+
+			// 下断点
+			CCLVEH::Instance()->InitVeh();
+			return 1;
+		}
+
+		// TEST UNHOOK（//UNHOOK）关闭VEH HOOK,选择角色前必须手动关闭
+		if (wcsncmp(L"//UNHOOK", str, 8) == 0) {
+			GameCall::SendText(L"HOOK关闭成功", rgb(249, 38, 114), 37);
+			// 关闭断点
+			CCLVEH::Instance()->ExitVeh();
+			return 1;
+		}
+
+		// TEST 开启F4热键(//HOTKEY)
+		if (wcsncmp(L"//HOTKEY", str, 8) == 0) {
+			GameCall::SendText(L"热键F4开启成功", rgb(249, 38, 114), 37);
+			vkid_F4 = HotkeyMonitor((PFUNC)&InjectHotKey, VK_F4);
+			return 1;
+		}
+
+		// TEST 关闭F4热键(//UNHOTKEY)
+		if (wcsncmp(L"//UNHOTKEY", str, 10) == 0) {
+			GameCall::SendText(L"热键F4关闭成功", rgb(249, 38, 114), 37);
+			HotKeyUnMonitor(vkid_F4);
+			return 1;
+		}
+
 
 		// TEST 喊话内容（//SHOUT [内容]）
 		if (wcsncmp(L"//SHOUT", str, 7) == 0) {
@@ -174,6 +233,56 @@ INT sendCommand(PCWCHAR str, INT type)
 			std::wstring _str = wstr.substr(7);
 			const wchar_t* pwchar_str = _str.c_str();
 			GameCall::Shout(pwchar_str);
+			return 1;
+		}
+
+		// TEST 获取角色信息
+		if (wcsncmp(L"//GET STATE", str, 11) == 0) {
+			gameStruct.Load();
+			return 1;
+		}
+
+		// TEST 地下城中使用药剂
+		if (wcsncmp(L"//USE", str, 5) == 0) {
+			gameStruct.UseDungeonItem();
+			return 1;
+		}
+
+		// TEST 释放技能（技能代码 伤害）
+		if (wcsncmp(L"//SKILL", str, 7) == 0) {
+			//SKILL 22228 1
+			int _skillId = 22228; // 男机械觉醒22228 万坚决[无法调伤害]30567  量子爆弹爆炸22206
+			int _injury = 999999; // 伤害999999
+			size_t length = std::wcslen(str);
+			// 创建一个std::wstring对象
+			std::wstring wstr(str, length);
+			std::wstring _str = wstr.substr(7);
+			// 过滤str两端的空格
+			std::wstring trimStr = trim(_str);
+			// 创建一个输入字符串流
+			std::vector<std::wstring> tokens = splitStrW(trimStr);
+
+			if (tokens.size() == 2) {
+				// 使用std::stoi将宽字符字符串转换为int
+				const wchar_t* skillId = tokens[0].c_str();
+				const wchar_t* injury = tokens[1].c_str();
+
+				// 获取技能
+				if (skillId != nullptr && isNumberW(skillId))
+				{
+					_skillId = std::stoi(skillId, nullptr, 10); // 参数3 10十进制
+					LogMessage("技能skillId:[%d]", (int*)_skillId);
+				}
+
+				// 获取伤害
+				if (injury != nullptr && isNumberW(injury))
+				{
+					_injury = std::stoi(injury, nullptr, 10); // 参数3 10十进制
+					LogMessage("伤害injury:[%d]", (int*)_injury);
+				}
+			}
+			LogMessage("技能[%d] 伤害[%d]", (int*)_skillId, (int*)_injury);
+			gameStruct.ReleaseSkill(_skillId, _injury);
 			return 1;
 		}
 

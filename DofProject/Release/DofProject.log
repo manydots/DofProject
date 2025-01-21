@@ -1,4 +1,5 @@
-﻿  dllmain.cpp
+﻿  CLVEH.cpp
+  dllmain.cpp
 D:\dp2\DofProject\Constants.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
   (编译源文件“dllmain.cpp”)
   
@@ -6,8 +7,15 @@ D:\dp2\DofProject\Constants.h(1,1): warning C4819: 该文件包含不能在当�
 D:\dp2\DofProject\Constants.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
   (编译源文件“Game.cpp”)
   
+  GameStruct.cpp
+D:\dp2\DofProject\Constants.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  (编译源文件“GameStruct.cpp”)
+  
   Gamex.cpp
 D:\dp2\DofProject\Constants.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  (编译源文件“Gamex.cpp”)
+  
+D:\dp2\DofProject\Hotkey.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
   (编译源文件“Gamex.cpp”)
   
 D:\dp2\DofProject\SkilSlot.h(96,4): warning C4102: “labnlRX”: 未引用的标签
@@ -17,10 +25,15 @@ D:\dp2\DofProject\SkilSlot.h(103,1): warning C4102: “labnlR”: 未引用的�
   (编译源文件“Gamex.cpp”)
   
   Hook.cpp
+  Hotkey.cpp
+D:\dp2\DofProject\Hotkey.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\dp2\DofProject\HotKey.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  (编译源文件“Hotkey.cpp”)
+  
   正在生成代码
   Previous IPDB not found, fall back to full compilation.
 D:\dp2\DofProject\Mosaic.h(476): warning C4733: 内联 asm 分配到“FS:0”: 处理程序未注册为安全处理程序
 D:\dp2\DofProject\Mosaic.h(570): warning C4733: 内联 asm 分配到“FS:0”: 处理程序未注册为安全处理程序
-  All 1122 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  All 1331 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   已完成代码的生成
   DofProject.vcxproj -> D:\dp2\DofProject\Release\DofProject.dll

@@ -42,10 +42,35 @@ BOOL ReadMemoryBytes(TCHAR* buffer, DWORD address, size_t length)
 }
 
 // 读取DWORD整数
-DWORD ReadDWORD(DWORD address)
+DWORD ReadDword(DWORD address)
 {
-	return *(DWORD*)(address);
+	//判断 内存地址是否有读取权限 如果有 返回值是0
+	if (IsBadReadPtr((DWORD*)address, sizeof(DWORD*)) == 0)
+	{
+		return *(DWORD*)address;
+	}
+	return 0;
 }
+
+FLOAT ReadFloat(DWORD Adress)
+{
+	//判断内存是否可以读 (参数1: 读取的地址,  参数2 : 长度) 返回值 0的话就是可以
+	if (IsBadReadPtr((void*)Adress, sizeof(FLOAT)) == 0) {
+		return *(FLOAT*)Adress;
+	}
+	return 0;
+
+}
+
+// wchar_t* IsBadReadPtrWchar(wchar_t* address)
+//{
+//	if (IsBadReadPtr((void*)address, sizeof(wchar_t*)) == 0)//判断 内存地址是否有读取权限 如果有 返回值是0
+//	{
+//		return  address;
+//	}
+//
+//	return L"NULL";
+//}
 
 
 // 将宽字节wchar_t*转化为单字节char*    

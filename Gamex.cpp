@@ -56,7 +56,7 @@ static void loadConfig()
 	int openLog = xini_file["系统配置"]["本地日志"];
 
 	if (openLog == 1) {
-		CreateConsle();
+		CreateConsole();
 	}
 
 	LogMessage("执行路径 %s", config_file);

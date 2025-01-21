@@ -9,7 +9,9 @@ BOOL IsMemoryReadable(void* address, size_t length);
 BOOL ReadMemoryBytes(TCHAR* buffer, DWORD address, size_t length);
 
 // 读取DWORD整数
-DWORD ReadDWORD(DWORD address);
+DWORD ReadDword(DWORD address);
+FLOAT ReadFloat(DWORD Adress);
+
 
 // 将宽字节wchar_t*转化为单字节char*    
 char* UnicodeToAnsi(const wchar_t* szStr);

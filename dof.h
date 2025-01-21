@@ -16,6 +16,7 @@
 #include "Memory.h"
 #include "Utils.h"
 #include "Logger.h"
+#include "GameStruct.h"
 #include "Gamex.h"
 
 namespace fs = std::filesystem; // 配置C++17 项目-配置属性- C/C++ -语言-  C++语言标准
