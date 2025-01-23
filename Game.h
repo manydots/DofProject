@@ -40,9 +40,19 @@ const _game_notice game_notice = (_game_notice)NOTICE_CALL;
 using _game_shout = void(__fastcall*)(UINT ecx, UINT edx, PCWCHAR str, INT type, INT n2, INT n3);
 const _game_shout game_shout = (_game_shout)SHOUT_CALL;
 
+// 文本Call
+using _game_text1 = void(__fastcall*)(UINT ecx, UINT edx, INT type);
+const _game_text1 game_text1 = (_game_text1)0x1206550;
+using _game_text2 = void(__fastcall*)(UINT ecx, UINT edx, INT x, INT y, INT rgb, PCWCHAR str);
+const _game_text2 game_text2 = (_game_text2)0x1206BD0;
+using _game_text3 = void(__fastcall*)(UINT ecx, UINT edx);
+const _game_text3 game_text3 = (_game_text3)0x1206570;
+
 namespace GameCall {
 	// 发送文本call   type 14喇叭公告  17系统公告 37个人公告
 	void SendText(PCWCHAR str, INT rgb, INT type);
 	// 喊话  type 3附近人 1悄悄话（交易对话） 喇叭11 师徒8  工会6
 	void Shout(PCWCHAR str, INT type = 3);
+	// 绘制文本
+	void DrawText2(INT x, INT y, INT rgb, PCWCHAR str);
 }

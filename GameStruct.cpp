@@ -9,7 +9,11 @@ void GameStruct::Load()
 	character.Z = ReadFloat(Character_Base + 0x194);
 	character.HP = ReadDword(Character_Base + 0x36A0); // 最大血量
 	character.State = ReadDword(ReadDword(ReadDword(GAME_STATE) + 0x14) + 0x28); // 人物状态
-	LogMessage("自身属性：State=%d, X=%f,Y=%f,Z=%f, MaxHP=%d", character.State, character.X, character.Y, character.Z, character.HP);
+
+	// 0x1A5FB18 房间编号基址  时间基址0x20A050 房间坐标偏移0x8C 副本当前X偏移0x610 副本当前Y偏移0x614
+	character.RoomX = ReadDword(ReadDword(ReadDword(ReadDword(0x1A5FB18) + 0x20A050) + 0x8C) + 0x610);
+	character.RoomY = ReadDword(ReadDword(ReadDword(ReadDword(0x1A5FB18) + 0x20A050) + 0x8C) + 0x614);
+	LogMessage("自身属性：State=%d, X=%0.1f,Y=%0.1f,Z=%0.1f 房间坐标(%d,%d) MaxHP=%d", character.State, character.X, character.Y, character.Z, character.RoomX, character.RoomY, character.HP);
 }
 
 // 释放技能(技能代码 伤害 x轴 y轴 z轴)
@@ -64,7 +68,7 @@ static void UseConsumable(const int& itemId)
 		pushad
 		mov ecx, dword ptr[CHARACTER_BASE] // 人物基址
 		mov edx, [ecx]
-		mov eax, 0x27ad45 // 物品id(16进制)
+		mov eax, itemId // 物品id(16进制)
 		push eax
 		mov edx, [edx + 0x5E4]
 		call edx

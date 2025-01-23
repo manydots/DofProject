@@ -4,6 +4,7 @@
 #include "CLVEH.h"
 #include "Hotkey.h"
 
+GameStruct gameStruct; // 初始化角色信息结构体
 HOTKEY_ID vkid_F4 = 0;
 
 // 0627关闭NPC重新回购后修复线条空缺问题 @蛐蛐大佬 提供
@@ -139,9 +140,6 @@ Naked void DefaultCharacter() {
 		jmp pfCha_ret
 	}
 }
-
-GameStruct gameStruct; // 初始化角色信息结构体
-
 
 // 断点的处理函数
 void hookCallBackFun(_EXCEPTION_POINTERS* ExceptionInfo) {

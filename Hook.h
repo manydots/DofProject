@@ -20,6 +20,7 @@ inline void writeVal(UINT address, T value)
 void WriteJmp(void* pfn, void* pCallback);
 void WriteCall(void* pfn, void* pCallback);
 
+BOOL AttachHook(DWORD hookedFunc, DWORD myHookFunc);
 
 class SimpleHook
 {

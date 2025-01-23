@@ -179,4 +179,11 @@ namespace GameCall {
 		UINT ecx = readVal(SHOUT_BASE);
 		game_shout(ecx, 0, str, type, 13, 0);
 	}
+	// »æÖÆÎÄ±¾
+	void DrawText2(INT x, INT y, INT rgb, PCWCHAR str) {
+		UINT ecx = readVal(0x1B45B94);
+		game_text1(ecx, 0, 0x1A74360);
+		game_text2(ecx, 0, x, y, rgb, str);
+		game_text3(ecx, 0);
+	}
 }

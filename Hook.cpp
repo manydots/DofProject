@@ -19,6 +19,14 @@ void WriteCall(void* pfn, void* pCallback) {
 	VirtualProtect(pfn, 5, pTmp, &pTmp);
 }
 
+BOOL AttachHook(DWORD hookAddress, DWORD hookFunc)
+{
+	DWORD hookedAddr = hookAddress;
+	BYTE hookedBytes[5] = { 0xE8,0x90,0x90,0x90,0x90 };
+	*(DWORD*)(hookedBytes + 1) = (DWORD)hookFunc - (DWORD)hookedAddr - 5;
+	return WriteProcessMemory(INVALID_HANDLE_VALUE, (LPVOID)hookedAddr, hookedBytes, 5, NULL);
+}
+
 
 BOOL SimpleHook::HookByAddress(DWORD hookedFunc, DWORD myHookFunc)
 {

@@ -8,7 +8,6 @@
 // 创建读写类
 Memory dx;
 
-
 // 载入配置
 static void loadConfig()
 {
@@ -352,9 +351,10 @@ namespace Gamex {
 	{
 		if (exeType == "0627") {
 			// 95C103 - E8 0859FFFF - call DNF.exe+551A10
-			BYTE hookedBytes[5] = { 0xE8,0x90,0x90,0x90,0x90 };
+			/*BYTE hookedBytes[5] = { 0xE8,0x90,0x90,0x90,0x90 };
 			*(DWORD*)(hookedBytes + 1) = (DWORD)sendCommand - (DWORD)0x95C103 - 5;
-			WriteProcessMemory(INVALID_HANDLE_VALUE, (LPVOID)0x95C103, hookedBytes, 5, NULL);
+			WriteProcessMemory(INVALID_HANDLE_VALUE, (LPVOID)0x95C103, hookedBytes, 5, NULL);*/
+			AttachHook(0x95C103, (DWORD)sendCommand);
 		}
 	}
 
